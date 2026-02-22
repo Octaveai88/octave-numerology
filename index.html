@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Numerology Calculator | Octave</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 2rem;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 0.5rem; color: #00d4ff; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 2rem; }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        label { display: block; margin-bottom: 0.5rem; color: #ccc; }
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        input:focus { outline: none; border-color: #00d4ff; }
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.02); }
+        .premium-btn {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            margin-top: 1rem;
+        }
+        .premium-btn:hover { transform: scale(1.02); }
+        .comparison-section { margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; }
+        .compare-inputs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .compare-inputs input { flex: 1; }
+        .compare-btn { width: auto; padding: 0.5rem 1rem; font-size: 0.9rem; }
+        .comparison-results { display: grid; gap: 1rem; margin-top: 1rem; }
+        .comparison-card { background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; }
+        .comparison-card .name { color: #00d4ff; font-weight: bold; }
+        .comparison-card .numbers { font-size: 0.85rem; color: #888; margin: 0.5rem 0; }
+        .best-match { border: 2px solid #00d4ff; }
+        .best-match::before { content: "★ BEST MATCH"; display: block; color: #00d4ff; font-size: 0.75rem; margin-bottom: 0.5rem; }
+        .destiny-badge { display: inline-block; background: #ffd700; color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.5rem; }
+        #result { margin-top: 2rem; display: none; }
+        .number-display {
+            font-size: 4rem;
+            text-align: center;
+            color: #00d4ff;
+            margin: 1rem 0;
+        }
+        .meaning {
+            background: rgba(0,212,255,0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        .footer { text-align: center; margin-top: 2rem; color: #666; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>∞ Business Numerology</h1>
+        <p class="subtitle">Discover the energy of your business name</p>
+        
+        <div class="card">
+            <label>Enter your business name:</label>
+            <input type="text" id="businessName" placeholder="e.g., Octave, Tesla, Apple" />
+            <button onclick="calculate()">Calculate</button>
+            
+            <div id="result">
+                <div class="number-display" id="number"></div>
+                <div class="meaning" id="meaning"></div>
+                
+                <div class="comparison-section">
+                    <label>Compare multiple names:</label>
+                    <div class="compare-inputs">
+                        <input type="text" id="compare1" placeholder="Name 1" />
+                        <input type="text" id="compare2" placeholder="Name 2" />
+                        <input type="text" id="compare3" placeholder="Name 3 (optional)" />
+                    </div>
+                    <button class="compare-btn" onclick="compare()">Compare All</button>
+                    <div class="comparison-results" id="comparisonResults"></div>
+                </div>
+                
+                <a href="https://octaveai.gumroad.com/l/sdslfl" target="_blank">
+                    <button class="premium-btn">Get Premium Report →</button>
+                </a>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: #666; text-align: center;">After purchase, email your business name to sales@e57brew.com for your report</p>
+            </div>
+        </div>
+        
+        <p class="footer">Built by Octave | 1241650 BC Ltd.</p>
+    </div>
+
+    <script>
+        const chaldean = {
+            'a':1,'i':1,'j':1,'q':1,'y':1,
+            'b':2,'k':2,'r':2,
+            'c':3,'g':3,'l':3,'s':3,
+            'd':4,'m':4,'t':4,
+            'e':5,'h':5,'n':5,'x':5,
+            'u':6,'v':6,'w':6,
+            'o':7,'z':7,
+            'f':8,'p':8
+        };
+        
+        const meanings = {
+            1: "The Pioneer. Leadership, independence, new beginnings. Your business brings innovative energy and drives forward with original ideas. Best for: Startups, tech, consultants.",
+            2: "The Diplomat. Partnership, balance, harmony. Your business thrives through collaboration and emotional intelligence. Best for: Service businesses, agencies, wellness.",
+            3: "The Creator. Expression, creativity, joy. Your business brings joy and communicates powerfully. Best for: Creative agencies, entertainment, marketing.",
+            4: "The Builder. Stability, hard work, foundation. Your business creates lasting systems and reliable results. Best for: Construction, finance, operations.",
+            5: "The Adventurer. Freedom, change, progress. Your business adapts quickly and embraces innovation. Best for: Travel, media, sales.",
+            6: "The Nurturer. Responsibility, home, community. Your business cares deeply for customers and creates loyal communities. Best for: Health, education, retail.",
+            7: "The Seeker. Wisdom, analysis, spirituality. Your business dives deep and provides expert insights. Best for: Research, legal, tech.",
+            8: "The Achiever. Power, abundance, authority. Your business achieves material success and commands respect. Best for: Finance, real estate, executive consulting.",
+            9: "The Humanitarian. Compassion, endings, transformation. Your business serves humanity and creates lasting change. Best for: Nonprofits, healthcare, philosophy.",
+            11: "The Master. Intuition, inspiration, enlightenment. Your business elevates others and channels divine inspiration. Best for: Spiritual businesses, coaching, innovation.",
+            22: "The Master Builder. Large-scale achievement, manifestation, power. Your business creates lasting legacy systems. Best for: Construction, enterprise, international.",
+            33: "The Master Healer. Compassionate creation, spiritual teaching. Your business transforms lives. Best for: Education, healing, humanitarian work."
+        };
+        
+        const soulMeanings = {
+            1: "You want to lead and be independent. Deep motivation: Proving yourself, being first.",
+            2: "You seek partnership and harmony. Deep motivation: Being loved, belonging, cooperation.",
+            3: "You crave expression and joy. Deep motivation: Being recognized, creativity, fun.",
+            4: "You desire stability and security. Deep motivation: Building something lasting, being reliable.",
+            5: "You want freedom and adventure. Deep motivation: Experiencing life, variety, independence.",
+            6: "You seek responsibility and care. Deep motivation: Family, community, being needed.",
+            7: "You desire wisdom and understanding. Deep motivation: Finding truth, being an expert.",
+            8: "You want power and achievement. Deep motivation: Success, recognition, abundance.",
+            9: "You seek meaning and service. Deep motivation: Helping others, leaving a legacy."
+        };
+        
+        function reduceToSingle(num) {
+            while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
+                num = num.toString().split('').reduce((a, b) => a + parseInt(b), 0);
+            }
+            return num;
+        }
+        
+        function calculate() {
+            const name = document.getElementById('businessName').value.toLowerCase().replace(/[^a-z]/g, '');
+            if (!name) return;
+            
+            let total = 0;
+            for (let char of name) {
+                total += chaldean[char] || 0;
+            }
+            
+            const number = reduceToSingle(total);
+            
+            // Calculate DESTINY (full name) - using vowels only for soul urge
+            let vowelTotal = 0;
+            const vowels = 'aeiou';
+            for (let char of name) {
+                if (vowels.includes(char)) {
+                    vowelTotal += chaldean[char] || 0;
+                }
+            }
+            const soulNumber = reduceToSingle(vowelTotal);
+            
+            document.getElementById('number').innerHTML = number + (number > 9 ? '<span class="destiny-badge">DESTINY</span>' : '');
+            document.getElementById('meaning').innerHTML = meanings[number] + 
+                (soulNumber > 0 ? '<br><br><strong>Soul Urge ' + soulNumber + ':</strong> ' + soulMeanings[soulNumber] : '');
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        function compare() {
+            const names = [
+                document.getElementById('compare1').value,
+                document.getElementById('compare2').value,
+                document.getElementById('compare3').value
+            ].filter(n => n.trim());
+            
+            if (names.length === 0) return;
+            
+            const results = names.map(name => {
+                const clean = name.toLowerCase().replace(/[^a-z]/g, '');
+                let total = 0;
+                for (let char of clean) {
+                    total += chaldean[char] || 0;
+                }
+                const number = reduceToSingle(total);
+                return { name, number, total };
+            });
+            
+            // Find best (8 or numbers that match - prefer 8, then master numbers, then balanced)
+            results.sort((a, b) => {
+                const scoreA = a.number === 8 ? 3 : (a.number === 11 || a.number === 22 || a.number === 33 ? 2 : 1);
+                const scoreB = b.number === 8 ? 3 : (b.number === 11 || b.number === 22 || b.number === 33 ? 2 : 1);
+                return scoreB - scoreA;
+            });
+            
+            const html = results.map((r, i) => 
+                '<div class="comparison-card' + (i === 0 ? ' best-match' : '') + '">' +
+                '<div class="name">' + r.name + '</div>' +
+                '<div class="numbers">Number: ' + r.number + ' | ' + meanings[r.number].substring(0, 60) + '...</div>' +
+                '</div>'
+            ).join('');
+            
+            document.getElementById('comparisonResults').innerHTML = html;
+        }
+    </script>
+</body>
+</html>

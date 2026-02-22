@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Numerology Calculator | Octave</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 2rem;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 0.5rem; color: #00d4ff; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 2rem; }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        label { display: block; margin-bottom: 0.5rem; color: #ccc; }
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        input:focus { outline: none; border-color: #00d4ff; }
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2r;
+        }
+        button:hover { transform: scale(1.02); }
+        #result { margin-top: 2rem; display: none; }
+        .number-display {
+            font-size: 4rem;
+            text-align: center;
+            color: #00d4ff;
+            margin: 1rem 0;
+        }
+        .meaning {
+            background: rgba(0,212,255,0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        .footer { text-align: center; margin-top: 2rem; color: #666; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>∞ Business Numerology</h1>
+        <p class="subtitle">Discover the energy of your business name</p>
+        
+        <div class="card">
+            <label>Enter your business name:</label>
+            <input type="text" id="businessName" placeholder="e.g., Octave, Tesla, Apple" />
+            <button onclick="calculate()">Calculate</button>
+            
+            <div id="result">
+                <div class="number-display" id="number"></div>
+                <div class="meaning" id="meaning"></div>
+            </div>
+        </div>
+        
+        <p class="footer">Built by Octave | 1241650 BC Ltd.</p>
+    </div>
+
+    <script>
+        const chaldean = {
+            'a':1,'i':1,'j':1,'q':1,'y':1,
+            'b':2,'h':2,'r':2,
+            'c':3,'g':3,'l':3,'s':3,
+            'd':4,'m':4,'t':4,
+            'e':5,'h':5,'n':5,'x':5,
+            'u':6,'v':6,'w':6,
+            'o':7,'z':7,
+            'f':8,'p':8
+        };
+        
+        const meanings = {
+            1: "The Pioneer. Leadership, independence, new beginnings. Your business brings innovative energy and drives forward with original ideas. Best for: Startups, tech, consultants.",
+            2: "The Diplomat. Partnership, balance, harmony. Your business thrives through collaboration and emotional intelligence. Best for: Service businesses, agencies, wellness.",
+            3: "The Creator. Expression, creativity, joy. Your business brings joy and communicates powerfully. Best for: Creative agencies, entertainment, marking."
+            4: "The Builder. Stability, hard work, foundation. Your business creates lasting systems and reliable results. Best for: Construction, finance, operations.",
+            5: "The Adventurer. Freedom, change, progress. Your business adapts quickly and embraces innovation. Best for: Travel, media, sales.",
+            6: "The Nurturer. Responsibility, home, community. Your business cares deeply for customers and creates loyal communities. Best for: Health, education, retail.",
+            7: "The Seeker. Wisdom, analysis, spirituality. Your business dives deep and provides expert insights. Best for: Research, legal, tech.",
+            8: "The Achiever. Power, abundance, authority. Your business achieves material success and commands respect. Best for: Finance, real estate, executive consulting.",
+            9: "The Humanitarian. Compassion, endings, transformation. Your business serves humanity and creates lasting change. Best for: Nonprofits, healthcare, philosophy."
+        };
+        
+        function reduceToSingle(num) {
+            while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
+                num = num.toString().split('').reduce((a, b) => a + parseInt(b), 0);
+            }
+            return num;
+        }
+        
+        function calculate() {
+            const name = document.getElementById('businessName').value.toLowerCase().replace(/[^a-z]/g, '');
+            if (!name) return;
+            
+            let total = 0;
+            for (let char of name) {
+                total += chaldean[char] || 0;
+            }
+            
+            const number = reduceToSingle(total);
+            
+            document.getElementById('number').textContent = number;
+            document.getElementById('meaning').textContent = meanings[number];
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

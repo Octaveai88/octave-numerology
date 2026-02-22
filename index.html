@@ -44,9 +44,14 @@
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2r;
+            transition: transform 0.2s;
         }
         button:hover { transform: scale(1.02); }
+        .premium-btn {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            margin-top: 1rem;
+        }
+        .premium-btn:hover { transform: scale(1.02); }
         #result { margin-top: 2rem; display: none; }
         .number-display {
             font-size: 4rem;
@@ -76,6 +81,9 @@
             <div id="result">
                 <div class="number-display" id="number"></div>
                 <div class="meaning" id="meaning"></div>
+                <a href="https://octaveai.gumroad.com/l/sdslfl" target="_blank">
+                    <button class="premium-btn">Get Premium Report →</button>
+                </a>
             </div>
         </div>
         
@@ -85,7 +93,7 @@
     <script>
         const chaldean = {
             'a':1,'i':1,'j':1,'q':1,'y':1,
-            'b':2,'h':2,'r':2,
+            'b':2,'k':2,'r':2,
             'c':3,'g':3,'l':3,'s':3,
             'd':4,'m':4,'t':4,
             'e':5,'h':5,'n':5,'x':5,
@@ -97,7 +105,7 @@
         const meanings = {
             1: "The Pioneer. Leadership, independence, new beginnings. Your business brings innovative energy and drives forward with original ideas. Best for: Startups, tech, consultants.",
             2: "The Diplomat. Partnership, balance, harmony. Your business thrives through collaboration and emotional intelligence. Best for: Service businesses, agencies, wellness.",
-            3: "The Creator. Expression, creativity, joy. Your business brings joy and communicates powerfully. Best for: Creative agencies, entertainment, marking."
+            3: "The Creator. Expression, creativity, joy. Your business brings joy and communicates powerfully. Best for: Creative agencies, entertainment, marketing.",
             4: "The Builder. Stability, hard work, foundation. Your business creates lasting systems and reliable results. Best for: Construction, finance, operations.",
             5: "The Adventurer. Freedom, change, progress. Your business adapts quickly and embraces innovation. Best for: Travel, media, sales.",
             6: "The Nurturer. Responsibility, home, community. Your business cares deeply for customers and creates loyal communities. Best for: Health, education, retail.",

@@ -181,9 +181,24 @@
             }
             const soulNumber = reduceToSingle(vowelTotal);
             
+            // Calculate CHALLENGE (missing numbers)
+            const usedNumbers = new Set();
+            for (let char of name) {
+                if (chaldean[char]) usedNumbers.add(chaldean[char]);
+            }
+            const missingNumbers = [];
+            for (let i = 1; i <= 9; i++) {
+                if (!usedNumbers.has(i)) missingNumbers.push(i);
+            }
+            const challengeNumber = missingNumbers.length > 0 ? missingNumbers[0] : 9;
+            
             document.getElementById('number').innerHTML = number + (number > 9 ? '<span class="destiny-badge">DESTINY</span>' : '');
-            document.getElementById('meaning').innerHTML = meanings[number] + 
-                (soulNumber > 0 ? '<br><br><strong>Soul Urge ' + soulNumber + ':</strong> ' + soulMeanings[soulNumber] : '');
+            let meaningText = meanings[number];
+            if (soulNumber > 0) {
+                meaningText += '<br><br><strong>Soul Urge ' + soulNumber + ':</strong> ' + soulMeanings[soulNumber];
+            }
+            meaningText += '<br><br><strong style="color:#ffd700;">Challenge: ' + challengeNumber + '</strong> — Your business needs to balance this energy. <a href="https://octaveai.gumroad.com/l/sdslfl" style="color:#00d4ff;">Get full analysis →</a>';
+            document.getElementById('meaning').innerHTML = meaningText;
             document.getElementById('result').style.display = 'block';
         }
         
